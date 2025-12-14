@@ -1,2 +1,9 @@
+#logs
 game_state.jsonl
 game_events.jsonl
+
+#python generated files
+__pycache__/
+
+#virtual environment
+.venv
