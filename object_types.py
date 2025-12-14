@@ -23,6 +23,8 @@ class Rectangle(GameObject):
         self.rect = pygame.Rect(x, y, width, height)
     
     def update_rect(self):
+        self.rect.x = self.x
+        self.rect.y = self.y
         self.rect.width = self.width
         self.rect.height = self.height
 
