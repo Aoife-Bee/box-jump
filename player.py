@@ -4,7 +4,7 @@ import pygame
 
 class Player(Rectangle):
     def __init__(self, x, y):
-        super().__init__(x, y, 50, 50)
+        super().__init__(x, y, 40, 40)
         self.collision_box = self.rect
         self.hurt_box = self.rect
         self.attack_box = None
