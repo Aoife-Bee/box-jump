@@ -5,6 +5,9 @@ class GameObject(pygame.sprite.Sprite):
     def __init__ (self, x, y):
         self.x = x
         self.y = y
+        self.collision_box = None
+        self.hurt_box = None
+        self.hit_box = None
 
     def update(self, dt):
         pass
