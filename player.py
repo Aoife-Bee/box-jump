@@ -4,9 +4,7 @@ import pygame
 
 class Player(Rectangle):
     def __init__(self, x, y):
-        super().__init__(x, y, 40, 40)
-        self.collision_box = self.rect
-        self.hurt_box = self.rect
+        super().__init__(x, y, PLAYER_WIDTH, PLAYER_HEIGHT)
         self.attack_box = None
         self.velocity_x = 0
         self.velocity_y = 0
@@ -17,6 +15,13 @@ class Player(Rectangle):
 
     def draw(self, screen):
         pygame.draw.rect(screen, "black", self.rect)
+        eye_y = self.rect.centery - 6
+        if self.direction == "right":
+            eye_x = self.rect.centerx + 8
+        else:
+            eye_x = self.rect.centerx - 8
+        pygame.draw.circle(screen, "white", (eye_x, eye_y), 4)
+        pygame.draw.rect(screen, "gray", self.rect, width=1)
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
@@ -30,7 +35,11 @@ class Player(Rectangle):
         if self.velocity_x < -self.max_speed:
             self.velocity_x = -self.max_speed
 
+    def move_x(self, dt):
         self.x += self.velocity_x * dt
+        self.update_rect()
+
+    def move_y(self, dt):
         self.y += self.velocity_y * dt
         self.update_rect()
 
