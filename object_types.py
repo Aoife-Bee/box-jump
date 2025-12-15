@@ -12,9 +12,6 @@ class GameObject(pygame.sprite.Sprite):
     def draw(self, screen):
         pass
 
-    def collides_with(self, other):
-        pass
-
 class Rectangle(GameObject):
     def __init__ (self, x, y, width, height):
         super().__init__(x, y)
