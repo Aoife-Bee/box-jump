@@ -37,7 +37,8 @@ class SolidTile(Rectangle):
         self.collision_box = self.rect
 
     def draw(self, screen, camera):
-        rect = self.rect.move(-camera.x, -camera.y)
+        cx, cy = camera.get_draw_offset()
+        rect = self.rect.move(-cx, -cy)
         pygame.draw.rect(screen, self.color, rect)
         pygame.draw.rect(screen, self.border_color, rect, width=2)
         highlight_height = 2

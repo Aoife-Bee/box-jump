@@ -25,9 +25,16 @@ class Camera:
         max_offset = 150
         self.offset_y = max(-max_offset, min(max_offset, self.offset_y))
 
-        self.x = target.rect.centerx - SCREEN_WIDTH // 2
-        self.y = target.rect.centery - SCREEN_HEIGHT // 2 + self.offset_y
+
+        target_cx = target.x + target.rect.width / 2
+        target_cy = target.y + target.rect.height / 2
+
+
+        self.x = target_cx - SCREEN_WIDTH / 2
+        self.y = target_cy - SCREEN_HEIGHT / 2 + self.offset_y
 
         self.x = max(0, min(self.x, self.level_width - SCREEN_WIDTH))
         self.y = max(0, min(self.y, self.level_height - SCREEN_HEIGHT))
 
+    def get_draw_offset(self):
+        return round(self.x), round(self.y)

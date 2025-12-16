@@ -48,7 +48,8 @@ class SpikeTile(Rectangle):
             )
 
     def draw(self, screen, camera):
-        rect = self.rect.move(-camera.x, -camera.y)
+        cx, cy = camera.get_draw_offset()
+        rect = self.rect.move(-cx, -cy)
         if self.direction == "up" or self.direction == "down":
             num_spikes = max(1, self.width // 20)
             spike_width = self.width // num_spikes
@@ -120,7 +121,8 @@ class LavaTile(Rectangle):
         self.hit_box = self.rect
 
     def draw(self, screen, camera):
-        rect = self.rect.move(-camera.x, -camera.y)
+        cx, cy = camera.get_draw_offset()
+        rect = self.rect.move(-cx, -cy)
         highlight_color = (255, 200, 150)
 
         pygame.draw.rect(screen, self.color, rect)

@@ -5,16 +5,30 @@ import pygame
 class Player(Rectangle):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_WIDTH, PLAYER_HEIGHT)
-        self.attack_box = None
+        self.x = float(x)
+        self.y = float(y)
+        self.update_rect()
         self.velocity_x = 0
         self.velocity_y = 0
         self.direction = "right"
         self.is_grounded = False
         self.is_jumping = False
         self.state = "idle"
+        self.jump_speed = 750
+        self.jump_buffer = 0.0
+        self.jump_buffer_time = 0.12
+        self.coyote = 0.0
+        self.coyote_time = 0.10
+        self.jump_cut_multiplier = 0.35
+        self.jump_cut_used = False
+        self.jump_held = False
+        self.rise_gravity_mult = 0.9
+        self.fall_gravity_mult = 1.4
+
 
     def draw(self, screen, camera):
-        rect = self.rect.move(-camera.x, -camera.y)
+        cx, cy = camera.get_draw_offset()
+        rect = self.rect.move(-cx, -cy)
         pygame.draw.rect(screen, "black", rect)
         eye_y = rect.centery - 6
         if self.direction == "right":
@@ -24,10 +38,30 @@ class Player(Rectangle):
         pygame.draw.circle(screen, "white", (eye_x, eye_y), 4)
         pygame.draw.rect(screen, "gray", rect, width=1)
 
-    def update(self, dt):
-        keys = pygame.key.get_pressed()
-        self.update_state(keys)
+    def update(self, dt, keys):
+        if self.jump_buffer > 0:
+            self.jump_buffer -= dt
 
+        if self.is_grounded:
+            self.coyote = self.coyote_time
+        else:
+            if self.coyote > 0:
+                self.coyote -= dt
+        
+        if self.jump_buffer > 0 and self.coyote > 0:
+            self.velocity_y = -self.jump_speed
+            self.is_grounded = False
+            self.is_jumping = True
+            self.jump_cut_used =  False
+            self.jump_buffer = 0.0
+            self.coyote = 0.0
+
+            if not self.jump_held and self.velocity_y < 0 and not self.jump_cut_used:
+                self.velocity_y *= self.jump_cut_multiplier
+                self.jump_cut_used = True
+
+        
+        self.update_state(keys)
         self.apply_movement(keys, dt)
         self.apply_gravity(dt)
 
@@ -46,13 +80,6 @@ class Player(Rectangle):
 
 
     def update_state(self, keys):
-
-        if keys[pygame.K_SPACE] and self.is_grounded:
-            self.is_jumping = True
-            self.velocity_y = -500
-            self.is_grounded = False
-            return
-
         if keys[pygame.K_LSHIFT] and not keys[pygame.K_s]:
             self.state = "sprinting"
         elif keys[pygame.K_s]:
@@ -80,6 +107,17 @@ class Player(Rectangle):
         else:
             self.apply_friction(dt)
 
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            self.jump_held = True
+            self.jump_buffer = self.jump_buffer_time
+
+        if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
+            self.jump_held = False
+            if self.velocity_y < 0 and not self.jump_cut_used:
+                self.velocity_y *= self.jump_cut_multiplier
+                self.jump_cut_used = True
+
     def apply_friction(self, dt):
         if self.velocity_x > 0:
             self.velocity_x -= self.friction * dt
@@ -91,8 +129,12 @@ class Player(Rectangle):
                 self.velocity_x = 0
 
     def apply_gravity(self, dt):
-        if not self.is_grounded:
-            self.velocity_y += GRAVITY * dt
+        if self.is_grounded:
+            return
+        if self.velocity_y < 0:
+            self.velocity_y += GRAVITY * self.rise_gravity_mult * dt
+        else:
+            self.velocity_y += GRAVITY * self.fall_gravity_mult * dt
 
     def walk(self):
         self.acceleration = 600

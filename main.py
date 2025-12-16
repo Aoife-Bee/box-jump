@@ -34,9 +34,12 @@ def main():
             if event.type == pygame.QUIT:
                 log_event("Quit event detected. Exiting the game.")
                 running = False
+            
+            player.handle_event(event)
+        
         keys = pygame.key.get_pressed()
 
-        player.update(dt)
+        player.update(dt, keys)
 
 
         player.move_x(dt)
@@ -62,12 +65,25 @@ def main():
                         player.velocity_y = 0
                         player.is_grounded = True
                         player.is_jumping = False
+                        player.jump_cut_used = False
                     elif player.velocity_y < 0:
                         player.rect.top = tile.collision_box.bottom
                         player.y = player.rect.y
                         player.velocity_y = 0
 
+        for hazard in hazard_tiles:
+            if hasattr(hazard, "hit_box") and hazard.hit_box:
+                if player.rect.colliderect(hazard.hit_box):
+                    pass
+        
+        #for coin in coins[:]:
+            #if coin.collides_with_player(player):
+                #coins.remove(coin)
+                #score += 1
+
         camera.update(player, dt, keys)
+
+
         #draw everything
         screen.fill((135, 206, 235)) # Sky Blue Background
         for tile in tiles:
