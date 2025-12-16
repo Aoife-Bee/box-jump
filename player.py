@@ -13,15 +13,16 @@ class Player(Rectangle):
         self.is_jumping = False
         self.state = "idle"
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, "black", self.rect)
-        eye_y = self.rect.centery - 6
+    def draw(self, screen, camera):
+        rect = self.rect.move(-camera.x, -camera.y)
+        pygame.draw.rect(screen, "black", rect)
+        eye_y = rect.centery - 6
         if self.direction == "right":
-            eye_x = self.rect.centerx + 8
+            eye_x = rect.centerx + 8
         else:
-            eye_x = self.rect.centerx - 8
+            eye_x = rect.centerx - 8
         pygame.draw.circle(screen, "white", (eye_x, eye_y), 4)
-        pygame.draw.rect(screen, "gray", self.rect, width=1)
+        pygame.draw.rect(screen, "gray", rect, width=1)
 
     def update(self, dt):
         keys = pygame.key.get_pressed()

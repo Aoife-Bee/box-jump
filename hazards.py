@@ -47,17 +47,18 @@ class SpikeTile(Rectangle):
                 self.height
             )
 
-    def draw(self, screen):
+    def draw(self, screen, camera):
+        rect = self.rect.move(-camera.x, -camera.y)
         if self.direction == "up" or self.direction == "down":
             num_spikes = max(1, self.width // 20)
             spike_width = self.width // num_spikes
             for i in range(num_spikes):
-                spike_x = self.rect.left + i * spike_width
+                spike_x = rect.left + i * spike_width
                 if self.direction == "up":
                     points = [
-                        (spike_x, self.rect.bottom),
-                        (spike_x + spike_width // 2, self.rect.top),
-                        (spike_x + spike_width, self.rect.bottom)
+                        (spike_x, rect.bottom),
+                        (spike_x + spike_width // 2, rect.top),
+                        (spike_x + spike_width, rect.bottom)
                     ]
                     highlight_points = [
                     points[0],
@@ -66,9 +67,9 @@ class SpikeTile(Rectangle):
                 ]
                 else:
                     points = [
-                        (spike_x, self.rect.top),
-                        (spike_x + spike_width // 2, self.rect.bottom),
-                        (spike_x + spike_width, self.rect.top)
+                        (spike_x, rect.top),
+                        (spike_x + spike_width // 2, rect.bottom),
+                        (spike_x + spike_width, rect.top)
                     ]
                     highlight_points = [
                     points[0],                          # top-left
@@ -83,12 +84,12 @@ class SpikeTile(Rectangle):
             num_spikes = max(1, self.height // 20)
             spike_height = self.height // num_spikes
             for i in range(num_spikes):
-                spike_y = self.rect.top + i * spike_height
+                spike_y = rect.top + i * spike_height
                 if self.direction == "left":
                     points = [
-                        (self.rect.right, spike_y),
-                        (self.rect.left, spike_y + spike_height // 2),
-                        (self.rect.right, spike_y + spike_height)
+                        (rect.right, spike_y),
+                        (rect.left, spike_y + spike_height // 2),
+                        (rect.right, spike_y + spike_height)
                     ]
                     highlight_points = [
                     points[0],                          # top-right
@@ -98,9 +99,9 @@ class SpikeTile(Rectangle):
 
                 elif self.direction == "right":
                     points = [
-                        (self.rect.left, spike_y),
-                        (self.rect.right, spike_y + spike_height // 2),
-                        (self.rect.left, spike_y + spike_height)
+                        (rect.left, spike_y),
+                        (rect.right, spike_y + spike_height // 2),
+                        (rect.left, spike_y + spike_height)
                     ]
                     highlight_points = [
                     points[0],                          # top-left
@@ -118,16 +119,17 @@ class LavaTile(Rectangle):
         self.color = color if color else (255, 70, 10)
         self.hit_box = self.rect
 
-    def draw(self, screen):
+    def draw(self, screen, camera):
+        rect = self.rect.move(-camera.x, -camera.y)
         highlight_color = (255, 200, 150)
 
-        pygame.draw.rect(screen, self.color, self.rect)
-        pygame.draw.rect(screen, (150,30,5), self.rect, width=2)
+        pygame.draw.rect(screen, self.color, rect)
+        pygame.draw.rect(screen, (150,30,5), rect, width=2)
         highlight_height = 2
         highlight_rect = pygame.Rect(
-            self.rect.left + 6,
-            self.rect.top+1,
-            self.width - 8,
+            rect.left + 6,
+            rect.top+1,
+            rect.width - 8,
             highlight_height
         )
         pygame.draw.rect(screen, highlight_color, highlight_rect)

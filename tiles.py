@@ -36,14 +36,15 @@ class SolidTile(Rectangle):
         self.highlight_color = lighten(self.color, 50)
         self.collision_box = self.rect
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.color, self.rect)
-        pygame.draw.rect(screen, self.border_color, self.rect, width=2)
+    def draw(self, screen, camera):
+        rect = self.rect.move(-camera.x, -camera.y)
+        pygame.draw.rect(screen, self.color, rect)
+        pygame.draw.rect(screen, self.border_color, rect, width=2)
         highlight_height = 2
         highlight_rect = pygame.Rect(
-            self.rect.left + 6,
-            self.rect.top+1,
-            self.width - 8,
+            rect.left + 6,
+            rect.top+1,
+            rect.width - 8,
             highlight_height
         )
         pygame.draw.rect(screen, self.highlight_color, highlight_rect)

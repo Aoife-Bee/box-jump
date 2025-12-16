@@ -7,6 +7,7 @@ from tiles import SolidTile
 from hazards import SpikeTile, LavaTile
 from builder import build_level_from_ascii
 from levels import LEVEL_1
+from camera import Camera
 
 
 def main():
@@ -19,6 +20,11 @@ def main():
     player = Player(*player_spawn)
     tiles = solid_tiles + hazard_tiles
 
+    level_width = len(LEVEL_1[0]) * TILE_SIZE
+    level_height = len(LEVEL_1) * TILE_SIZE
+
+    camera = Camera(level_width, level_height)
+
     running = True
 
     while running:
@@ -28,6 +34,7 @@ def main():
             if event.type == pygame.QUIT:
                 log_event("Quit event detected. Exiting the game.")
                 running = False
+        keys = pygame.key.get_pressed()
 
         player.update(dt)
 
@@ -60,11 +67,12 @@ def main():
                         player.y = player.rect.y
                         player.velocity_y = 0
 
+        camera.update(player, dt, keys)
         #draw everything
         screen.fill((135, 206, 235)) # Sky Blue Background
         for tile in tiles:
-            tile.draw(screen)
-        player.draw(screen)
+            tile.draw(screen, camera)
+        player.draw(screen, camera)
 
         #display game objects here
         pygame.display.flip()
