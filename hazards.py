@@ -115,7 +115,7 @@ class SpikeTile(Rectangle):
 class LavaTile(Rectangle):
     def __init__(self, x, y, width, height, color=None):
         super().__init__(x, y, width, height)
-        self.color = color if color else (255, 100, 10)
+        self.color = color if color else (255, 70, 10)
         self.hit_box = self.rect
 
     def draw(self, screen):
