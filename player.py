@@ -5,16 +5,24 @@ import pygame
 class Player(Rectangle):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_WIDTH, PLAYER_HEIGHT)
+        self._init_position(x, y)
+        self._init_physics()
+        self._init_jump()
+        self._init_state()
+
+    def _init_position(self, x, y):
         self.x = float(x)
         self.y = float(y)
         self.update_rect()
+
+    def _init_physics(self):
         self.velocity_x = 0
         self.velocity_y = 0
-        self.direction = "right"
-        self.is_grounded = False
-        self.is_jumping = False
-        self.state = "idle"
-        self.jump_speed = 750
+        self.rise_gravity_mult = 0.9
+        self.fall_gravity_mult = 1.4
+    
+    def _init_jump(self):
+        self.jump_speed = 680
         self.jump_buffer = 0.0
         self.jump_buffer_time = 0.12
         self.coyote = 0.0
@@ -22,9 +30,12 @@ class Player(Rectangle):
         self.jump_cut_multiplier = 0.35
         self.jump_cut_used = False
         self.jump_held = False
-        self.rise_gravity_mult = 0.9
-        self.fall_gravity_mult = 1.4
 
+    def _init_state(self):
+        self.direction = "right"
+        self.is_grounded = False
+        self.is_jumping = False
+        self.state = "idle"
 
     def draw(self, screen, camera):
         cx, cy = camera.get_draw_offset()
@@ -114,7 +125,7 @@ class Player(Rectangle):
 
         if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
             self.jump_held = False
-            if self.velocity_y < 0 and not self.jump_cut_used:
+            if self.velocity_y < 0 and self.velocity_y < 0 and not self.jump_cut_used:
                 self.velocity_y *= self.jump_cut_multiplier
                 self.jump_cut_used = True
 
@@ -143,10 +154,10 @@ class Player(Rectangle):
     
     def sprint(self):
         self.acceleration = 1000
-        self.friction = 1200
+        self.friction = 1600
         self.max_speed = 450
     
     def crouch_walk(self):
         self.acceleration = 400
-        self.friction = 800
+        self.friction = 1200
         self.max_speed = 150
