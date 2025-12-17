@@ -1,6 +1,6 @@
 from constants import *
 from tiles import SolidTile
-from hazards import SpikeTile, LavaTile
+from hazards import SpikeTile, WaterTile
 
 def build_level_from_ascii(layout, tile_size):
     solid_tiles = []
@@ -55,9 +55,9 @@ def build_level_from_ascii(layout, tile_size):
                     )
                 )
             elif char == "~":
-                lava_height = int(tile_size * LAVA_HEIGHT_RATIO)
-                y_offset = tile_size - lava_height
-                hazard_tiles.append(LavaTile(x, y + y_offset, tile_size, lava_height))
+                water_height = int(tile_size * WATER_HEIGHT_RATIO)
+                y_offset = tile_size - water_height
+                hazard_tiles.append(WaterTile(x, y + y_offset, tile_size, water_height))
             elif char == "P":
                 player_spawn = (x, y)
             elif char in (" ", "."):

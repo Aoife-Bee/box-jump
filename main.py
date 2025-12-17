@@ -4,7 +4,7 @@ from constants import *
 from logger import log_state, log_event
 from player import Player
 from tiles import SolidTile
-from hazards import SpikeTile, LavaTile
+from hazards import SpikeTile, WaterTile
 from builder import build_level_from_ascii
 from levels import LEVEL_1
 from camera import Camera

@@ -114,19 +114,19 @@ class SpikeTile(Rectangle):
                 pygame.draw.polygon(screen, (255,255,255), highlight_points)
                 pygame.draw.polygon(screen, (0, 0, 0), points, width=1)
 
-class LavaTile(Rectangle):
+class WaterTile(Rectangle):
     def __init__(self, x, y, width, height, color=None):
         super().__init__(x, y, width, height)
-        self.color = color if color else (255, 70, 10)
+        self.color = color if color else (10, 70, 255)
         self.hit_box = self.rect
 
     def draw(self, screen, camera):
         cx, cy = camera.get_draw_offset()
         rect = self.rect.move(-cx, -cy)
-        highlight_color = (255, 200, 150)
+        highlight_color = (100, 200, 255)
 
         pygame.draw.rect(screen, self.color, rect)
-        pygame.draw.rect(screen, (150,30,5), rect, width=2)
+        pygame.draw.rect(screen, (5,30,150), rect, width=2)
         highlight_height = 2
         highlight_rect = pygame.Rect(
             rect.left + 6,
