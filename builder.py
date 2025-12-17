@@ -1,6 +1,7 @@
 from constants import *
-from tiles import SolidTile
-from hazards import SpikeTile, WaterTile
+from solid_tiles import SolidTile
+from hazards import SpikeTile
+from liquid_tiles import WaterTile
 
 def build_level_from_ascii(layout, tile_size):
     solid_tiles = []

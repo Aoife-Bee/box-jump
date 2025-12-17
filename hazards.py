@@ -1,5 +1,6 @@
 import pygame
 from object_types import Rectangle
+from constants import SPIKE_SIZE
 
 
 class SpikeTile(Rectangle):
@@ -51,10 +52,12 @@ class SpikeTile(Rectangle):
         cx, cy = camera.get_draw_offset()
         rect = self.rect.move(-cx, -cy)
         if self.direction == "up" or self.direction == "down":
-            num_spikes = max(1, self.width // 20)
-            spike_width = self.width // num_spikes
+            num_spikes = 3
+            spike_width = SPIKE_SIZE
+            total_width = SPIKE_SIZE * num_spikes
+            start_x = rect.centerx - total_width // 2
             for i in range(num_spikes):
-                spike_x = rect.left + i * spike_width
+                spike_x = start_x + i * spike_width
                 if self.direction == "up":
                     points = [
                         (spike_x, rect.bottom),
@@ -82,10 +85,13 @@ class SpikeTile(Rectangle):
                 pygame.draw.polygon(screen, (255,255,255), highlight_points)
                 pygame.draw.polygon(screen, (0, 0, 0), points, width=1)
         else:
-            num_spikes = max(1, self.height // 20)
-            spike_height = self.height // num_spikes
+            num_spikes = 3
+            spike_height = SPIKE_SIZE
+            total_height = spike_height * num_spikes
+            start_y = rect.centery - total_height // 2
             for i in range(num_spikes):
-                spike_y = rect.top + i * spike_height
+
+                spike_y = start_y + i * spike_height
                 if self.direction == "left":
                     points = [
                         (rect.right, spike_y),
@@ -113,25 +119,3 @@ class SpikeTile(Rectangle):
                 pygame.draw.polygon(screen, self.color, points) 
                 pygame.draw.polygon(screen, (255,255,255), highlight_points)
                 pygame.draw.polygon(screen, (0, 0, 0), points, width=1)
-
-class WaterTile(Rectangle):
-    def __init__(self, x, y, width, height, color=None):
-        super().__init__(x, y, width, height)
-        self.color = color if color else (10, 70, 255)
-        self.hit_box = self.rect
-
-    def draw(self, screen, camera):
-        cx, cy = camera.get_draw_offset()
-        rect = self.rect.move(-cx, -cy)
-        highlight_color = (100, 200, 255)
-
-        pygame.draw.rect(screen, self.color, rect)
-        pygame.draw.rect(screen, (5,30,150), rect, width=2)
-        highlight_height = 2
-        highlight_rect = pygame.Rect(
-            rect.left + 6,
-            rect.top+1,
-            rect.width - 8,
-            highlight_height
-        )
-        pygame.draw.rect(screen, highlight_color, highlight_rect)
