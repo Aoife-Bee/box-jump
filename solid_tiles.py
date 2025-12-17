@@ -49,11 +49,3 @@ class SolidTile(Rectangle):
             highlight_height
         )
         pygame.draw.rect(screen, self.highlight_color, highlight_rect)
-
-class DecoTile(GameObject):
-    def __init__(self, x, y, color):
-        super().__init__(x, y) 
-        self.color = color 
-
-    def draw(self, screen):
-        pass # Decorative tiles do not have a defined shape

@@ -1,11 +1,12 @@
 from constants import *
 from solid_tiles import SolidTile
 from hazards import SpikeTile
-from liquid_tiles import WaterTile
+from liquid_tiles import WaterTile, SwampWaterTile
 
 def build_level_from_ascii(layout, tile_size):
     solid_tiles = []
     hazard_tiles = []
+    liquid_tiles = []
     player_spawn = (0, 0)
 
     for row_index, row in enumerate(layout):
@@ -56,12 +57,12 @@ def build_level_from_ascii(layout, tile_size):
                     )
                 )
             elif char == "~":
-                water_height = int(tile_size * WATER_HEIGHT_RATIO)
-                y_offset = tile_size - water_height
-                hazard_tiles.append(WaterTile(x, y + y_offset, tile_size, water_height))
+                liquid_tiles.append(WaterTile(x, y, tile_size, tile_size, depth=0.75))
+            elif char == "=":
+                liquid_tiles.append(SwampWaterTile(x, y, tile_size, tile_size, depth=0.6))
             elif char == "P":
                 player_spawn = (x, y)
             elif char in (" ", "."):
                 pass
 
-    return solid_tiles, hazard_tiles, player_spawn
+    return solid_tiles, hazard_tiles, liquid_tiles, player_spawn

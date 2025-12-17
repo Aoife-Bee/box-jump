@@ -17,9 +17,9 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
 
-    solid_tiles, hazard_tiles, player_spawn = build_level_from_ascii(LEVEL_1, tile_size=TILE_SIZE)
+    solid_tiles, hazard_tiles, liquid_tiles, player_spawn = build_level_from_ascii(LEVEL_1, tile_size=TILE_SIZE)
     player = Player(*player_spawn)
-    tiles = solid_tiles + hazard_tiles
+    tiles = solid_tiles + hazard_tiles + liquid_tiles
 
     level_width = len(LEVEL_1[0]) * TILE_SIZE
     level_height = len(LEVEL_1) * TILE_SIZE
@@ -41,6 +41,21 @@ def main():
         keys = pygame.key.get_pressed()
 
         player.update(dt, keys)
+
+
+        for liquid in liquid_tiles:
+            if player.rect.colliderect(liquid.rect):
+                player.in_liquid = True
+                player.speed_multiplier = 1.0 * liquid.slowdown
+                player.liquid_timer = 0.2
+        
+        if player.liquid_timer > 0:
+            player.liquid_timer -= dt
+            player.speed_multiplier = 1.0 * liquid.slowdown
+        else:
+            player.speed_multiplier = 1.0
+
+
 
 
         player.move_x(dt)
@@ -76,20 +91,15 @@ def main():
             if hasattr(hazard, "hit_box") and hazard.hit_box:
                 if player.rect.colliderect(hazard.hit_box):
                     pass
-        
-        #for coin in coins[:]:
-            #if coin.collides_with_player(player):
-                #coins.remove(coin)
-                #score += 1
 
         camera.update(player, dt, keys)
 
 
         #draw everything
         screen.fill((135, 206, 235)) # Sky Blue Background
+        player.draw(screen, camera)
         for tile in tiles:
             tile.draw(screen, camera)
-        player.draw(screen, camera)
 
         #display game objects here
         pygame.display.flip()

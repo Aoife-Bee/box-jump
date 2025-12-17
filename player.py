@@ -17,6 +17,8 @@ class Player(Rectangle):
 
     def _init_physics(self):
         self.velocity_x = 0
+        self.speed_multiplier = 1.0
+        self.liquid_timer = 0.0
         self.velocity_y = 0
         self.rise_gravity_mult = 0.9
         self.fall_gravity_mult = 1.4
@@ -34,7 +36,10 @@ class Player(Rectangle):
     def _init_state(self):
         self.direction = "right"
         self.is_grounded = False
+        self.is_sprinting = False
+        self.was_sprinting = False
         self.is_jumping = False
+        self.in_liquid = False
         self.state = "idle"
 
     def draw(self, screen, camera):
@@ -60,12 +65,19 @@ class Player(Rectangle):
                 self.coyote -= dt
         
         if self.jump_buffer > 0 and self.coyote > 0:
-            self.velocity_y = -self.jump_speed
+            if self.in_liquid:
+                self.rise_gravity_mult = 1.5
+                self.velocity_y = -self.jump_speed
+            else:
+                self.velocity_y = -self.jump_speed
+
+            self.rise_gravity_mult = 1.5
             self.is_grounded = False
             self.is_jumping = True
             self.jump_cut_used =  False
             self.jump_buffer = 0.0
             self.coyote = 0.0
+
 
             if not self.jump_held and self.velocity_y < 0 and not self.jump_cut_used:
                 self.velocity_y *= self.jump_cut_multiplier
@@ -82,23 +94,31 @@ class Player(Rectangle):
             self.velocity_x = -self.max_speed
 
     def move_x(self, dt):
-        self.x += self.velocity_x * dt
+        self.x += self.velocity_x * dt * self.speed_multiplier
         self.update_rect()
 
     def move_y(self, dt):
-        self.y += self.velocity_y * dt
+        self.y += self.velocity_y * dt * self.speed_multiplier
         self.update_rect()
 
 
     def update_state(self, keys):
-        if keys[pygame.K_LSHIFT] and not keys[pygame.K_s]:
-            self.state = "sprinting"
-        elif keys[pygame.K_s]:
+        if keys[pygame.K_s]:
             self.state = "crouching"
-        elif self.velocity_x != 0:
+            self.is_sprinting = False
+            return
+
+        if keys[pygame.K_LSHIFT] and self.is_grounded and self.liquid_timer == 0:
+            self.state = "sprinting"
+            self.is_sprinting = True
+            self.was_sprinting = True
+        elif self.is_grounded:
             self.state = "walking"
-        else:
-            self.state = "idle"
+            self.is_sprinting = False
+            self.was_sprinting = False
+
+        if not self.is_grounded and getattr(self, "was_sprinting", False):
+            self.is_sprinting = True
 
     def apply_movement(self, keys, dt):
 

@@ -2,10 +2,15 @@ from object_types import Rectangle
 import pygame
 
 class WaterTile(Rectangle):
-    def __init__(self, x, y, width, height, color=None):
+    def __init__(self, x, y, width, height, color="blue", depth=1.0, slowdown=0.5):
         super().__init__(x, y, width, height)
         self.color = color if color else (10, 70, 255)
-        self.hit_box = self.rect
+        self.depth = depth
+        self.slowdown = slowdown
+
+        self.height = int(self.height * depth)
+        self.y = y + (height - self.height)
+        self.update_rect()
 
     def draw(self, screen, camera):
         cx, cy = camera.get_draw_offset()
@@ -22,3 +27,7 @@ class WaterTile(Rectangle):
             highlight_height
         )
         pygame.draw.rect(screen, highlight_color, highlight_rect)
+
+class SwampWaterTile(WaterTile):
+    def __init__(self, x, y, width, height, color="olive", depth=1.0, slowdown=0.3):
+        super().__init__(x, y, width, height, color=color, depth=depth, slowdown=slowdown)
