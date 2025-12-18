@@ -2,7 +2,7 @@ from object_types import Rectangle
 import pygame
 
 class WaterTile(Rectangle):
-    def __init__(self, x, y, width, height, color="blue", depth=1.0, slowdown=0.5):
+    def __init__(self, x, y, width, height, color="blue", depth=1.0, slowdown=0.6):
         super().__init__(x, y, width, height)
         self.color = color if color else (10, 70, 255)
         self.depth = depth

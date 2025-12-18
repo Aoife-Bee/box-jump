@@ -18,6 +18,7 @@ class Player(Rectangle):
     def _init_physics(self):
         self.velocity_x = 0
         self.speed_multiplier = 1.0
+        self.liquid_slowdown = 1.0
         self.liquid_timer = 0.0
         self.velocity_y = 0
         self.rise_gravity_mult = 0.9
@@ -64,14 +65,8 @@ class Player(Rectangle):
             if self.coyote > 0:
                 self.coyote -= dt
         
-        if self.jump_buffer > 0 and self.coyote > 0:
-            if self.in_liquid:
-                self.rise_gravity_mult = 1.5
-                self.velocity_y = -self.jump_speed
-            else:
-                self.velocity_y = -self.jump_speed
-
-            self.rise_gravity_mult = 1.5
+        if self.jump_buffer > 0 and self.coyote > 0:  
+            self.velocity_y = -self.jump_speed
             self.is_grounded = False
             self.is_jumping = True
             self.jump_cut_used =  False
@@ -145,7 +140,7 @@ class Player(Rectangle):
 
         if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
             self.jump_held = False
-            if self.velocity_y < 0 and self.velocity_y < 0 and not self.jump_cut_used:
+            if self.velocity_y < 0 and not self.jump_cut_used:
                 self.velocity_y *= self.jump_cut_multiplier
                 self.jump_cut_used = True
 
@@ -161,7 +156,17 @@ class Player(Rectangle):
 
     def apply_gravity(self, dt):
         if self.is_grounded:
+            self.rise_gravity_mult = 0.9
+            self.fall_gravity_mult = 1.4
             return
+        
+        if self.in_liquid:
+            self.rise_gravity_mult = 1.35
+            self.fall_gravity_mult = 1.0
+        else:
+            self.rise_gravity_mult = 0.9
+            self.fall_gravity_mult = 1.4
+
         if self.velocity_y < 0:
             self.velocity_y += GRAVITY * self.rise_gravity_mult * dt
         else:

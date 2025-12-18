@@ -40,21 +40,27 @@ def main():
         
         keys = pygame.key.get_pressed()
 
-        player.update(dt, keys)
-
+        player.in_liquid = False
 
         for liquid in liquid_tiles:
             if player.rect.colliderect(liquid.rect):
                 player.in_liquid = True
-                player.speed_multiplier = 1.0 * liquid.slowdown
-                player.liquid_timer = 0.2
+                player.liquid_slowdown = liquid.slowdown
+                player.liquid_timer = 0.3
+                break
         
-        if player.liquid_timer > 0:
-            player.liquid_timer -= dt
-            player.speed_multiplier = 1.0 * liquid.slowdown
+        if player.in_liquid:
+            player.speed_multiplier = player.liquid_slowdown
         else:
-            player.speed_multiplier = 1.0
+            if player.liquid_timer > 0:
+                player.liquid_timer -= dt
+                if player.liquid_timer < 0:
+                    player.liquid_timer = 0
+                player.speed_multiplier = player.liquid_slowdown
+            else:
+                player.speed_multiplier = 1.0
 
+        player.update(dt, keys)
 
 
 
