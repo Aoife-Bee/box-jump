@@ -1,11 +1,13 @@
 from object_types import Rectangle
 from constants import *
+from health import Health
 import pygame
 
 class Player(Rectangle):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_WIDTH, PLAYER_HEIGHT)
         self._init_position(x, y)
+        self._init_health()
         self._init_physics()
         self._init_jump()
         self._init_state()
@@ -14,6 +16,9 @@ class Player(Rectangle):
         self.x = float(x)
         self.y = float(y)
         self.update_rect()
+
+    def _init_health(self):
+        self.health = Health(5)
 
     def _init_physics(self):
         self.velocity_x = 0

@@ -1,21 +1,34 @@
-from object_types import GameObject
-from constants import *
-from player import Player
-
-class HealthBar(GameObject):
-    def __init__(x, y)
-    super().__init(x, y)
 
 
-def player_take_damage(current_health, damage_taken):
-    if current_health <= damage_taken:
-        return player_rip()
-    damage_taken_animation()
-    return current health -= damage_taken
+class Health:
+    def __init__(self, max_health):
+        self.max_health = max_health
+        self.health = max_health
+        self.is_dead = False
 
-def damage_animation()
+    def take_damage(self, amount):
+        if self.is_dead:
+            return
+        self.health = max(0, self.health - amount)
+        if self.health == 0:
+            self.is_dead = True
+    
+    def heal(self, amount):
+        if self.is_dead:
+            return
+        self.health = min(self.max_health, self.health + amount)
 
-def death_animation()
+    def respawn(self):
+        if self.is_dead:
+            self.health = self.max_health
+            self.is_dead = False
 
-def player_rip()
+def damage_animation():
+    pass
+
+def death_animation():
+    pass
+
+def player_rip():
+    pass
 

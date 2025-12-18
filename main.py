@@ -9,6 +9,7 @@ from liquid_tiles import WaterTile
 from builder import build_level_from_ascii
 from levels import LEVEL_1
 from camera import Camera
+from healthbar import HealthBar
 
 
 def main():
@@ -19,6 +20,7 @@ def main():
 
     solid_tiles, hazard_tiles, liquid_tiles, player_spawn = build_level_from_ascii(LEVEL_1, tile_size=TILE_SIZE)
     player = Player(*player_spawn)
+    healthbar = HealthBar()
     tiles = solid_tiles + hazard_tiles + liquid_tiles
 
     level_width = len(LEVEL_1[0]) * TILE_SIZE
@@ -106,6 +108,7 @@ def main():
         player.draw(screen, camera)
         for tile in tiles:
             tile.draw(screen, camera)
+        healthbar.draw(screen, player.health)
 
         #display game objects here
         pygame.display.flip()
