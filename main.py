@@ -1,15 +1,14 @@
 import pygame
-import sys
 from constants import *
 from logger import log_state, log_event
 from player import Player
-from solid_tiles import SolidTile
-from hazards import SpikeTile
-from liquid_tiles import WaterTile
 from builder import build_level_from_ascii
-from levels import LEVEL_1
+from levels import LEVELS
 from camera import Camera
 from healthbar import HealthBar
+from backgrounds import Sky
+from collisions import *
+
 
 
 def main():
@@ -18,15 +17,22 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
 
-    solid_tiles, hazard_tiles, liquid_tiles, player_spawn = build_level_from_ascii(LEVEL_1, tile_size=TILE_SIZE)
+    level_index = 0
+    level_data = LEVELS[level_index]
+    layout = level_data["layout"]
+
+    solid_tiles, hazard_tiles, liquid_tiles, player_spawn = build_level_from_ascii(
+        layout, tile_size=TILE_SIZE
+        )
     player = Player(*player_spawn)
-    healthbar = HealthBar()
+    health_bar = HealthBar()
     tiles = solid_tiles + hazard_tiles + liquid_tiles
 
-    level_width = len(LEVEL_1[0]) * TILE_SIZE
-    level_height = len(LEVEL_1) * TILE_SIZE
-
+    level_width = len(layout[0]) * TILE_SIZE
+    level_height = len(layout) * TILE_SIZE
     camera = Camera(level_width, level_height)
+
+    sky = Sky(level_data["sky_top"], level_data["sky_bottom"])
 
     running = True
 
@@ -42,73 +48,25 @@ def main():
         
         keys = pygame.key.get_pressed()
 
-        player.in_liquid = False
-
-        for liquid in liquid_tiles:
-            if player.rect.colliderect(liquid.rect):
-                player.in_liquid = True
-                player.liquid_slowdown = liquid.slowdown
-                player.liquid_timer = 0.3
-                break
-        
-        if player.in_liquid:
-            player.speed_multiplier = player.liquid_slowdown
-        else:
-            if player.liquid_timer > 0:
-                player.liquid_timer -= dt
-                if player.liquid_timer < 0:
-                    player.liquid_timer = 0
-                player.speed_multiplier = player.liquid_slowdown
-            else:
-                player.speed_multiplier = 1.0
-
+        apply_liquid_effects(player, liquid_tiles, dt)
         player.update(dt, keys)
 
-
-
         player.move_x(dt)
-        for tile in solid_tiles:
-            if hasattr(tile, "collision_box") and tile.collision_box:
-                if player.rect.colliderect(tile.collision_box):
-                    if player.velocity_x > 0:
-                        player.rect.right = tile.collision_box.left
-                        player.x = player.rect.x
-                        player.velocity_x = 0
-                    elif player.velocity_x < 0:
-                        player.rect.left = tile.collision_box.right
-                        player.x = player.rect.x
-                        player.velocity_x = 0
+        resolve_solid_collisions_x(player, solid_tiles)
         player.move_y(dt)
-        player.is_grounded = False
-        for tile in solid_tiles:    
-            if hasattr(tile, 'collision_box') and tile.collision_box:
-                if player.rect.colliderect(tile.collision_box):
-                    if player.velocity_y > 0:
-                        player.rect.bottom = tile.collision_box.top
-                        player.y = player.rect.y
-                        player.velocity_y = 0
-                        player.is_grounded = True
-                        player.is_jumping = False
-                        player.jump_cut_used = False
-                    elif player.velocity_y < 0:
-                        player.rect.top = tile.collision_box.bottom
-                        player.y = player.rect.y
-                        player.velocity_y = 0
+        resolve_solid_collisions_y(player, solid_tiles)
 
-        for hazard in hazard_tiles:
-            if hasattr(hazard, "hit_box") and hazard.hit_box:
-                if player.rect.colliderect(hazard.hit_box):
-                    pass
+        hazard_collision(player, hazard_tiles)
 
         camera.update(player, dt, keys)
 
 
         #draw everything
-        screen.fill((135, 206, 235)) # Sky Blue Background
+        sky.draw(screen)
         player.draw(screen, camera)
         for tile in tiles:
             tile.draw(screen, camera)
-        healthbar.draw(screen, player.health)
+        health_bar.draw(screen, player.health)
 
         #display game objects here
         pygame.display.flip()

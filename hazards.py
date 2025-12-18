@@ -9,43 +9,54 @@ class SpikeTile(Rectangle):
         self.color = color if color else ("gray")
         self.direction = direction
         self.set_hitbox()
+        self.hit_box = self.hit_box.inflate(-13, -5)
+        self.collision_box = self.hit_box
 
     def set_hitbox(self):
 
         danger_percent = 0.6
+        num_spikes = 3
 
         if self.direction == "up":
+            total_width = SPIKE_SIZE * num_spikes
+            start_x = self.rect.centerx - total_width // 2
             hit_height = int(self.height * danger_percent)
             self.hit_box = pygame.Rect(
-                self.rect.left,
+                start_x,
                 self.rect.top,
-                self.width,
+                total_width,
                 hit_height
             )
         elif self.direction == "down":
+            total_width = SPIKE_SIZE * num_spikes
+            start_x = self.rect.centerx - total_width // 2
             hit_height = int(self.height * danger_percent)
             self.hit_box = pygame.Rect(
-                self.rect.left,
+                start_x,
                 self.rect.bottom - hit_height,
-                self.width,
+                total_width,
                 hit_height
             )
         elif self.direction == "left":
+            total_height = SPIKE_SIZE * num_spikes
+            start_y = self.rect.centery - total_height // 2
             hit_width = int(self.width * danger_percent)
             self.hit_box = pygame.Rect(
                 self.rect.left,
-                self.rect.top,
+                start_y,
                 hit_width,
-                self.height
+                total_height
             )
         
         elif self.direction == "right":
+            total_height = SPIKE_SIZE * num_spikes
+            start_y = self.rect.centery - total_height // 2
             hit_width = int(self.width * danger_percent)
             self.hit_box = pygame.Rect(
                 self.rect.right - hit_width,
-                self.rect.top,
+                start_y,
                 hit_width,
-                self.height
+                total_height
             )
 
     def draw(self, screen, camera):

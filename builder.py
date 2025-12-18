@@ -17,45 +17,47 @@ def build_level_from_ascii(layout, tile_size):
             if char == "#":
                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, "brown"))
             elif char == "^":
-                hazard_tiles.append(
-                    SpikeTile(
+                    spike_u = SpikeTile(
                         x + (tile_size - SPIKE_SIZE) // 2,
                         y + tile_size - SPIKE_SIZE,
                         SPIKE_SIZE, 
                         SPIKE_SIZE, 
                         "up"
                     )
-                )
+                    hazard_tiles.append(spike_u)
+                    solid_tiles.append(spike_u)
             elif char == "v":
-                hazard_tiles.append(
-                    SpikeTile(
+                    spike_d = SpikeTile(
                         x + (tile_size - SPIKE_SIZE) // 2,
                         y, 
                         SPIKE_SIZE,
                         SPIKE_SIZE, 
                         "down"
                     )
-                )
+                    hazard_tiles.append(spike_d)
+                    solid_tiles.append(spike_d)
             elif char == "<":
-                hazard_tiles.append(
-                    SpikeTile(
+                    spike_l = SpikeTile(
                         x + tile_size - SPIKE_SIZE,
                         y + (tile_size - SPIKE_SIZE) // 2,
                         SPIKE_SIZE,
                         SPIKE_SIZE,
                         "left"
                     )
-                )
+                    hazard_tiles.append(spike_l)
+                    solid_tiles.append(spike_l)
+                
             elif char == ">":
-                hazard_tiles.append(
-                    SpikeTile(
+                spike_r = SpikeTile(
                         x,
                         y + (tile_size - SPIKE_SIZE) // 2, 
                         SPIKE_SIZE, 
                         SPIKE_SIZE, 
                         "right"
                     )
-                )
+                hazard_tiles.append(spike_r)
+                solid_tiles.append(spike_r)
+
             elif char == "~":
                 liquid_tiles.append(WaterTile(x, y, tile_size, tile_size, depth=0.75))
             elif char == "=":

@@ -1,4 +1,4 @@
-LEVEL_1 = [
+LEVEL_1_MAP = [
     "#                                                  #",
     "#                                                  #",
     "#                                                  #",
@@ -25,12 +25,30 @@ LEVEL_1 = [
     "####################################################",
 ]
 
-LEVEL_2 = [
+LEVEL_2_MAP = [
 
 ]
 
 
-LEVEL_3 = [
+LEVEL_3_MAP = [
 
 ]
 
+LEVELS = [
+    {
+        "layout": LEVEL_1_MAP,
+        "sky_top": (90, 160, 255),
+        "sky_bottom": (180, 220, 255),
+    },
+    {
+       "layout": LEVEL_2_MAP,
+        "sky_top": (255, 140, 80),
+        "sky_bottom": (120, 70, 160), 
+    },
+    {
+        "layout": LEVEL_3_MAP,
+        "sky_top": (10, 10, 40),
+        "sky_bottom": (40, 40, 90),
+    },
+    
+]
