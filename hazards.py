@@ -9,7 +9,10 @@ class SpikeTile(Rectangle):
         self.color = color if color else ("gray")
         self.direction = direction
         self.set_hitbox()
-        self.hit_box = self.hit_box.inflate(-13, -5)
+        if self.direction in ("up", "down"):
+            self.hit_box = self.hit_box.inflate(-13, -5)
+        else:
+            self.hot_box = self.hit_box.inflate(-5, -13)
         self.collision_box = self.hit_box
 
     def set_hitbox(self):

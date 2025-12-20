@@ -48,6 +48,6 @@ def hazard_collision(player, hazard_tiles):
     for hazard in hazard_tiles:
         hit = getattr(hazard, "hit_box", None)
         if hit and player.rect.colliderect(hit.inflate(2, 2)):
-            player.health.take_damage(1)
+            player.try_take_damage(1, hit)
             return True
     return False

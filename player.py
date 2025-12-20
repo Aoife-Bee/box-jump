@@ -11,6 +11,7 @@ class Player(Rectangle):
         self._init_physics()
         self._init_jump()
         self._init_state()
+        self._init_damage()
 
     def _init_position(self, x, y):
         self.x = float(x)
@@ -48,7 +49,23 @@ class Player(Rectangle):
         self.in_liquid = False
         self.state = "idle"
 
+    def _init_damage(self):
+        self.iframes = 0.0
+        self.hurt_timer = 0.0
+        self.knockback_timer = 0.0
+
+        self.iframes_time = 0.50
+        self.hurt_time = 0.20
+        self.knockback_time = 0.20
+        self.kb_x_speed = 250
+        self.kb_y_speed = 180
+
     def draw(self, screen, camera):
+        if self.iframes > 0:
+            if int(self.iframes * 20) % 2 == 0:  # 25 = flicker speed
+                return
+
+
         cx, cy = camera.get_draw_offset()
         rect = self.rect.move(-cx, -cy)
         pygame.draw.rect(screen, "black", rect)
@@ -61,6 +78,8 @@ class Player(Rectangle):
         pygame.draw.rect(screen, "gray", rect, width=1)
 
     def update(self, dt, keys):
+        self._update_hurt_timers(dt)
+        
         if self.jump_buffer > 0:
             self.jump_buffer -= dt
 
@@ -70,18 +89,13 @@ class Player(Rectangle):
             if self.coyote > 0:
                 self.coyote -= dt
         
-        if self.jump_buffer > 0 and self.coyote > 0:  
+        if self.jump_buffer > 0 and self.coyote > 0 and self.knockback_timer <= 0:  
             self.velocity_y = -self.jump_speed
             self.is_grounded = False
             self.is_jumping = True
             self.jump_cut_used =  False
             self.jump_buffer = 0.0
             self.coyote = 0.0
-
-
-            if not self.jump_held and self.velocity_y < 0 and not self.jump_cut_used:
-                self.velocity_y *= self.jump_cut_multiplier
-                self.jump_cut_used = True
 
         
         self.update_state(keys)
@@ -100,7 +114,6 @@ class Player(Rectangle):
     def move_y(self, dt):
         self.y += self.velocity_y * dt * self.speed_multiplier
         self.update_rect()
-
 
     def update_state(self, keys):
         if keys[pygame.K_s]:
@@ -121,6 +134,10 @@ class Player(Rectangle):
             self.is_sprinting = True
 
     def apply_movement(self, keys, dt):
+
+        if self.knockback_timer > 0:
+            self.apply_friction(dt * 0.5)
+            return
 
         if self.state == "idle" or self.state == "walking":
             self.walk()
@@ -176,6 +193,38 @@ class Player(Rectangle):
             self.velocity_y += GRAVITY * self.rise_gravity_mult * dt
         else:
             self.velocity_y += GRAVITY * self.fall_gravity_mult * dt
+
+    def _update_hurt_timers(self, dt):
+        if self.iframes > 0:
+            self.iframes = max(0.0, self.iframes - dt)
+        if self.hurt_timer > 0:
+            self.hurt_timer = max(0.0, self.hurt_timer - dt)
+        if self.knockback_timer > 0:
+            self.knockback_timer = max(0.0, self.knockback_timer - dt)
+
+    def try_take_damage(self, amount, source_rect=None):
+        if self.iframes > 0 or self.health.is_dead:
+            return False
+        
+        self.health.take_damage(amount)
+
+        self.iframes = self.iframes_time
+        self.hurt_timer = self.hurt_time
+        self.knockback_timer = self.knockback_time
+
+        self.jump_buffer = 0.0
+        self.coyote = 0.0
+        self.jump_cut_used = True
+
+        if source_rect is not None:
+            dir_x = 1 if self.rect.centerx >= source_rect.centerx else -1
+        else:
+            dir_x = -1 if self.direction == "right" else 1
+
+        self.velocity_x = dir_x * self.kb_x_speed
+        self.velocity_y =  -self.kb_y_speed
+
+        return True
 
     def walk(self):
         self.acceleration = 600
