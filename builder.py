@@ -14,8 +14,15 @@ def build_level_from_ascii(layout, tile_size):
             x = col_index * tile_size
             y = row_index * tile_size
 
-            if char == "#":
-                solid_tiles.append(SolidTile(x, y, tile_size, tile_size, "brown"))
+            if char == "g":
+                solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (94, 182, 30)))
+            elif char == "b":
+                solid_tiles.append(SolidTile(x, y, tile_size, tile_size, ("beige")))
+            elif char == "#":
+                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, ("grey")))
+            elif char == "t":
+                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, ("brown")))
+
                  
             elif char == "^":
                     spike_u = SpikeTile(
