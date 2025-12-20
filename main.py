@@ -3,12 +3,10 @@ from constants import *
 from logger import log_state, log_event
 from player import Player
 from builder import build_level_from_ascii
-from levels import LEVELS
-from camera import Camera
+from rooms import ROOMS, DOORS, START_ROOM
 from healthbar import HealthBar
-from backgrounds import Sky
 from collisions import *
-
+from room_manager import RoomManager
 
 
 def main():
@@ -17,22 +15,11 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
 
-    level_index = 0
-    level_data = LEVELS[level_index]
-    layout = level_data["layout"]
-
-    solid_tiles, hazard_tiles, liquid_tiles, player_spawn = build_level_from_ascii(
-        layout, tile_size=TILE_SIZE
-        )
-    player = Player(*player_spawn)
+    player = Player(0,0)
     health_bar = HealthBar()
-    tiles = solid_tiles + hazard_tiles + liquid_tiles
 
-    level_width = len(layout[0]) * TILE_SIZE
-    level_height = len(layout) * TILE_SIZE
-    camera = Camera(level_width, level_height)
-
-    sky = Sky(level_data["sky_top"], level_data["sky_bottom"])
+    rm = RoomManager(ROOMS, DOORS, TILE_SIZE, build_level_from_ascii)
+    rm.load_room(START_ROOM, player)
 
     running = True
 
@@ -43,29 +30,30 @@ def main():
             if event.type == pygame.QUIT:
                 log_event("Quit event detected. Exiting the game.")
                 running = False
-            
             player.handle_event(event)
         
         keys = pygame.key.get_pressed()
 
-        apply_liquid_effects(player, liquid_tiles, dt)
+        apply_liquid_effects(player, rm.liquid_tiles, dt)
         player.update(dt, keys)
 
         player.move_x(dt)
-        resolve_solid_collisions_x(player, solid_tiles)
+        resolve_solid_collisions_x(player, rm.solid_tiles)
         player.move_y(dt)
-        resolve_solid_collisions_y(player, solid_tiles)
+        resolve_solid_collisions_y(player, rm.solid_tiles)
 
-        hazard_collision(player, hazard_tiles)
+        hazard_collision(player, rm.hazard_tiles)
 
-        camera.update(player, dt, keys)
+        rm.update_transition(dt, player)
+
+        rm.camera.update(player, dt, keys)
 
 
         #draw everything
-        sky.draw(screen)
-        player.draw(screen, camera)
-        for tile in tiles:
-            tile.draw(screen, camera)
+        rm.sky.draw(screen)
+        player.draw(screen, rm.camera)
+        for tile in rm.tiles_to_draw:
+            tile.draw(screen, rm.camera)
         health_bar.draw(screen, player.health)
 
         #display game objects here

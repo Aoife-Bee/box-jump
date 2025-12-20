@@ -16,6 +16,7 @@ def build_level_from_ascii(layout, tile_size):
 
             if char == "#":
                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, "brown"))
+                 
             elif char == "^":
                     spike_u = SpikeTile(
                         x + (tile_size - SPIKE_SIZE) // 2,
@@ -46,7 +47,6 @@ def build_level_from_ascii(layout, tile_size):
                     )
                     hazard_tiles.append(spike_l)
                     solid_tiles.append(spike_l)
-                
             elif char == ">":
                 spike_r = SpikeTile(
                         x,
@@ -62,8 +62,10 @@ def build_level_from_ascii(layout, tile_size):
                 liquid_tiles.append(WaterTile(x, y, tile_size, tile_size, depth=0.75))
             elif char == "=":
                 liquid_tiles.append(SwampWaterTile(x, y, tile_size, tile_size, depth=0.6))
+
             elif char == "P":
                 player_spawn = (x, y)
+
             elif char in (" ", "."):
                 pass
 
