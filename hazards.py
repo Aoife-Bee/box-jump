@@ -12,7 +12,7 @@ class SpikeTile(Rectangle):
         if self.direction in ("up", "down"):
             self.hit_box = self.hit_box.inflate(-13, -5)
         else:
-            self.hot_box = self.hit_box.inflate(-5, -13)
+            self.hit_box = self.hit_box.inflate(-5, -13)
         self.collision_box = self.hit_box
 
     def set_hitbox(self):
