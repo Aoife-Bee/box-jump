@@ -6,7 +6,7 @@ from constants import SPIKE_SIZE
 class SpikeTile(Rectangle):
     def __init__(self, x, y, width, height, direction="up", color=None):
         super().__init__(x, y, width, height)
-        self.color = color if color else ("gray")
+        self.color = color if color else (190, 50, 50)
         self.direction = direction
         self.set_hitbox()
         if self.direction in ("up", "down"):
@@ -96,7 +96,7 @@ class SpikeTile(Rectangle):
                     ]
 
                 pygame.draw.polygon(screen, self.color, points)
-                pygame.draw.polygon(screen, (255,255,255), highlight_points)
+                pygame.draw.polygon(screen, (255,200,50), highlight_points)
                 pygame.draw.polygon(screen, (0, 0, 0), points, width=1)
         else:
             num_spikes = 3
