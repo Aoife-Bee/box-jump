@@ -54,10 +54,10 @@ class Player(Rectangle):
         self.hurt_timer = 0.0
         self.knockback_timer = 0.0
 
-        self.iframes_time = 0.50
-        self.hurt_time = 0.20
-        self.knockback_time = 0.20
-        self.kb_x_speed = 250
+        self.iframes_time = 1.00
+        self.hurt_time = 0.25
+        self.knockback_time = 0.25
+        self.kb_x_speed = 270
         self.kb_y_speed = 180
 
     def draw(self, screen, camera):

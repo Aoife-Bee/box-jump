@@ -19,9 +19,9 @@ def build_level_from_ascii(layout, tile_size):
             elif char == "b":
                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, ("beige")))
             elif char == "#":
-                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, ("grey")))
+                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (75, 93, 61)))
             elif char == "t":
-                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, ("brown")))
+                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (150, 75, 0)))
 
                  
             elif char == "^":

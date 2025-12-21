@@ -37,4 +37,4 @@ class Camera:
         self.y = max(0, min(self.y, self.level_height - SCREEN_HEIGHT))
 
     def get_draw_offset(self):
-        return round(self.x), round(self.y)
+        return int(self.x), int(self.y)

@@ -13,7 +13,7 @@ ROOM_01_MAP = [
     "                            ggggggggggggggggggggg",
     "                                         ggggggtt",
     "                    bb                      gggtt",
-    "                                              gtt",
+    "   bb                                         gtt",
     "                                               tt",                
     "               bb                              tt",              
     "                                               tt",
@@ -24,7 +24,7 @@ ROOM_01_MAP = [
     "                                    bb         tt",
     "                                               tt",
     "                 g                             tt",
-    "                ggg           bbb              tt",         
+    "                 gg           bbb              tt",         
     "                 t     bbb                     tt",              
     "          bbb    t                             tt",             
     "                 t                             tt",                 
@@ -34,19 +34,41 @@ ROOM_01_MAP = [
 ]
 
 ROOM_02_MAP = [
-    "#                                  #",
-    "#                                  #",
-    "#                                  #",
-    "#                                  #",
-    "                                   .",
-    "                                   .",
-    "                                   .",
-    "                                   .",
-    "                                   .",
-    "####################################",
+    "t                                                                              ",
+    "t        ^^                                                                    ",
+    "        <tt>                                                                   ",
+    "         vv                                                                    ",
+    "                                                                               ",
+    "    ^^^                                                                        ",
+    "ggggttt>                                                                       ",
+    "ggggttgggg                                                                     ",
+    "gggttggggggg                                                                   ",
+    "ggttggggggggg       ggg                                                        ",
+    "gttggggggggt        gggg                                                       ",
+    "ttggggggggtt         ttgg                                                      ",
+    "tgg    gggtt^^^^^^^^^ttg    bb                 ^^^^                            ",
+    "t       ggttttttttttttt                   ^   <tttt>                          #",
+    "t        ggggggggggggtt          bb      <t>   vvvv                           #",
+    "t                ggggtt               ggggt>                                 ##",
+    "t                  ggtt                gtttgg                              ####",
+    "t                   gtt                 ttgg                             ######",
+    "t                    tt                 tt      gggg                      #####",
+    "t                    tt                 tt      gttg                        ###",
+    "t                    tt                 tt       tgg                        ###",
+    "t                    tt                 tt       t         P        ^^     ####",
+    "t                    tt                 tt       t        #########<##>   #####",
+    "                     tt                 tt       t        #####     vv     ####",
+    "                     tt                 tt       t       #####              ###",
+    "                     tt                 tt       t       ####     #         ###",
+    "                     tt                 tt       t      #####     ####^^^   ###",
+    "                     tt                 tt       t      #####     #############",
+    "                     tt                 tt       t       #####               ##",
+    "                     tt                 tt       t        #####               #",
+    "                     tt                 tt       t         ######             #",
+    "                     tt                 tt       t          #######           #",
+    "                     tt                 tt       t           ##############...#",
 
 ]
-
 
 ROOM_03_MAP = [
     "#                                  #",
@@ -80,12 +102,12 @@ ROOMS = {
     },
 }
 
-START_ROOM = "room_01"
+START_ROOM = "room_02"
 
 DOORS = {
     "room_01": [
         {"id": "right_exit", 
-        "rect": (49, 0, 1, 5), 
+        "rect": (49, 0, 1, 6), 
         "edge": "right", 
         "to": ("room_02", "left_exit")},
     ],
@@ -96,7 +118,7 @@ DOORS = {
         "to": ("room_01", "right_exit")},
 
         {"id": "right_exit",  
-        "rect": (36, 4, 1, 5), 
+        "rect": (150, 4, 1, 5), 
         "edge": "right",
         "to": ("room_03", "left_exit")},
     ],
