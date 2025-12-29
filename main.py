@@ -84,7 +84,7 @@ def main():
             rm.update_transition(dt, player)
 
         rm.camera.update(player, dt, keys)
-
+        
         #draw everything
         rm.sky.draw(screen)
         player.draw(screen, rm.camera)
