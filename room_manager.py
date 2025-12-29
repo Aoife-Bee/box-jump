@@ -8,6 +8,7 @@ class RoomManager:
         self.doors = doors
         self.tile_size = tile_size
         self.build_func = build_func
+        self.spawn_px = (0, 0)
 
         self.room_id = None
         self.layout = None
@@ -25,8 +26,8 @@ class RoomManager:
 
         self.door_cooldown = 0.0
 
-    def door_rect_px(self, door):
-        c, r, w, h = door["rect"]
+    def door_rect_px(self, door_def):
+        c, r, w, h = door_def["rect"]
         return pygame.Rect(
             c * self.tile_size,
             r * self.tile_size,
@@ -35,9 +36,9 @@ class RoomManager:
             )
     
     def find_door_hit(self, player_rect):
-        for door in self.doors.get(self.room_id, []):
-            if player_rect.colliderect(self.door_rect_px(door)):
-                return door
+        for door_def in self.doors.get(self.room_id, []):
+            if player_rect.colliderect(self.door_rect_px(door_def)):
+                return door_def
         return None
     
     def find_door_by_id(self, room_id, door_id):
@@ -66,13 +67,27 @@ class RoomManager:
         player.y = float(y)
         player.update_rect()
 
-    def spawn_player_at_door(self, player, door_rect_px):
+    def spawn_player_at_door(self, player, door_def):
+        door_rect_px = self.door_rect_px(door_def)
+
         x = door_rect_px.centerx - player.width / 2
-        y = door_rect_px.bottom - player.height
-        if door_rect_px.left <= 0:
-            x += self.tile_size
-        elif door_rect_px.right >= self.level_width_px:
-            x -= self.tile_size
+        y = door_rect_px.centery - player.height / 2
+
+        pad = self.tile_size
+
+        edge = door_def.get("edge") 
+
+        if edge == "left":
+            x = door_rect_px.right + pad
+            y = door_rect_px.bottom - player.height
+        elif edge == "right":
+            x = door_rect_px.left - player.width - pad
+            y = door_rect_px.bottom - player.height
+        elif edge == "up":
+            y = door_rect_px.bottom + pad
+        elif edge == "down":
+            y = door_rect_px.top - player.height - pad
+
         self.set_player_pos(player, x, y)
 
     
@@ -84,7 +99,7 @@ class RoomManager:
         self.solid_tiles, self.hazard_tiles, self.liquid_tiles, player_spawn = self.build_func(
             self.layout, tile_size=self.tile_size
         )
-    
+        self.spawn_px = (int(player_spawn[0]), int(player_spawn[1]))
         self.tiles_to_draw = self.solid_tiles + self.liquid_tiles
 
         self.level_width_px = len(self.layout[0]) * self.tile_size
@@ -95,8 +110,15 @@ class RoomManager:
         if arrive_door_id is not None:
             door_def = self.find_door_by_id(room_id, arrive_door_id)
             if door_def is not None:
-                self.spawn_player_at_door(player, self.door_rect_px(door_def))
+                self.spawn_player_at_door(player, door_def)
                 self._reset_player_motion(player)
+
+                if door_def.get("edge") == "down":
+                    player.velocity_y = -player.jump_speed * 0.75
+                    player.is_grounded = False
+                    player.is_jumping = True
+
+                self.spawn_px = (int(player.x), int(player.y))
                 self.door_cooldown = 0.25
                 return
             
