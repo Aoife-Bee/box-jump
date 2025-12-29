@@ -18,17 +18,12 @@ class Health:
             return
         self.health = min(self.max_health, self.health + amount)
 
+    def kill(self):
+        self.health = 0
+        self.is_dead = True
+
     def respawn(self):
         if self.is_dead:
             self.health = self.max_health
             self.is_dead = False
-
-def damage_animation():
-    pass
-
-def death_animation():
-    pass
-
-def player_rip():
-    pass
 

@@ -8,6 +8,7 @@ class SpikeTile(Rectangle):
         super().__init__(x, y, width, height)
         self.color = color if color else (205, 50, 50)
         self.direction = direction
+        self.damage_cause = "spikes"
         self.set_hitbox()
         if self.direction in ("up", "down"):
             self.hit_box = self.hit_box.inflate(-13, -5)

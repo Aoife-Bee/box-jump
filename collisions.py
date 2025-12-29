@@ -49,5 +49,6 @@ def hazard_collision(player, hazard_tiles):
         hit = getattr(hazard, "hit_box", None)
         if hit and player.rect.colliderect(hit.inflate(2, 2)):
             player.try_take_damage(1, hit)
+            player.last_damage_cause = getattr(hazard, "damage_cause", "hazard")
             return True
     return False

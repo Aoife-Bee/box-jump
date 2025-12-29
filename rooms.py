@@ -13,7 +13,7 @@ ROOM_01_MAP = [
     "                            ggggggggggggggggggggg",
     "                                         ggggggtt",
     "                    bb                      gggtt",
-    "   bb                                         gtt",
+    "    bb                                        gtt",
     "                                               tt",                
     "               bb                              tt",              
     "                                               tt",
@@ -36,10 +36,10 @@ ROOM_01_MAP = [
 ROOM_02_MAP = [
     "t                                                                              ",
     "t        ^^                                                                    ",
-    ".       <tt>                                                                   ",
-    ".        vv                                                                    ",
-    ".                                                                              ",
-    ".   ^^^                                                                        ",
+    "        <tt>                                                                   ",
+    "         vv                                                                    ",
+    "                                                                               ",
+    " P  ^^^                                                                        ",
     "ggggttt>                                                                       ",
     "ggggttgggg                                                                     ",
     "gggttggggggg                                                                   ",
@@ -65,7 +65,7 @@ ROOM_02_MAP = [
     "                     tt                 tt       t       #####               ##",
     "                     tt                 tt       t        #####               #",
     "                     tt                 tt       t         ######             #",
-    "                     tt                 tt       t          #######  P        #",
+    "                     tt                 tt       t          #######           #",
     "                     tt                 tt       t           ##############   #",
 
 ]
@@ -96,7 +96,7 @@ ROOM_03_MAP = [
     "#   #                                #",
     "#   #                                #",
     "#   ###                                #",
-    "#                                   #",
+    "#                                      ",
     "#========#                                   #",
     "####################################",
 

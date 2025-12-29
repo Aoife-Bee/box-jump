@@ -137,4 +137,14 @@ class RoomManager:
         
         to_room_id, to_door_id = hit["to"]
         self.load_room(to_room_id, player, arrive_door_id=to_door_id)
-        return True        
+        return True
+    
+    def respawn_player(self, player):
+        player.health.respawn()
+
+        x, y = self.spawn_px
+        self.set_player_pos(player, x, y)
+
+        self._reset_player_motion(player)
+        player.iframes = 0.5
+        self.door_cooldown = 0.25

@@ -7,6 +7,7 @@ from rooms import ROOMS, DOORS, START_ROOM
 from healthbar import HealthBar
 from collisions import *
 from room_manager import RoomManager
+from death_controller import DeathController
 
 
 def main():
@@ -17,6 +18,7 @@ def main():
 
     player = Player(0,0)
     health_bar = HealthBar()
+    death = DeathController(delay=4.0)
 
     rm = RoomManager(ROOMS, DOORS, TILE_SIZE, build_level_from_ascii)
     rm.load_room(START_ROOM, player)
@@ -34,20 +36,22 @@ def main():
         
         keys = pygame.key.get_pressed()
 
-        apply_liquid_effects(player, rm.liquid_tiles, dt)
-        player.update(dt, keys)
+        if death.update(dt, player, rm):
+            pass
+        else:
+            apply_liquid_effects(player, rm.liquid_tiles, dt)
+            player.update(dt, keys)
 
-        player.move_x(dt)
-        resolve_solid_collisions_x(player, rm.solid_tiles)
-        player.move_y(dt)
-        resolve_solid_collisions_y(player, rm.solid_tiles)
+            player.move_x(dt)
+            resolve_solid_collisions_x(player, rm.solid_tiles)
+            player.move_y(dt)
+            resolve_solid_collisions_y(player, rm.solid_tiles)
 
-        hazard_collision(player, rm.hazard_tiles)
+            hazard_collision(player, rm.hazard_tiles)
 
-        rm.update_transition(dt, player)
+            rm.update_transition(dt, player)
 
         rm.camera.update(player, dt, keys)
-
 
         #draw everything
         rm.sky.draw(screen)
@@ -57,6 +61,7 @@ def main():
         health_bar.draw(screen, player.health)
 
         #display game objects here
+        death.draw(screen)
         pygame.display.flip()
 
 

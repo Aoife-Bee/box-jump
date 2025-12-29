@@ -53,6 +53,7 @@ class Player(Rectangle):
         self.iframes = 0.0
         self.hurt_timer = 0.0
         self.knockback_timer = 0.0
+        self.last_damage_cause = "hp"
 
         self.iframes_time = 1.00
         self.hurt_time = 0.25
