@@ -31,7 +31,7 @@ def resolve_solid_collisions_x(player, solid_tiles):
             player.velocity_x = 0
 
 def resolve_solid_collisions_y(player, solid_tiles):
-    player.is_grounded = player.is_grounded and (player.velocity_y >= 0)
+    player.is_grounded = False
     for tile in solid_tiles:    
         box = getattr(tile, "collision_box", None)
         if box and player.rect.colliderect(box):
