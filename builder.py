@@ -2,12 +2,14 @@ from constants import *
 from solid_tiles import SolidTile
 from hazards import SpikeTile
 from liquid_tiles import WaterTile, SwampWaterTile
+from collectables import GoalOrb
 
 def build_level_from_ascii(layout, tile_size):
     solid_tiles = []
     hazard_tiles = []
     liquid_tiles = []
     player_spawn = (0, 0)
+    goal = None
 
     for row_index, row in enumerate(layout):
         for col_index, char in enumerate(row):
@@ -73,7 +75,15 @@ def build_level_from_ascii(layout, tile_size):
             elif char == "P":
                 player_spawn = (x, y)
 
+            elif char == "*":
+                 goal = GoalOrb(
+                      x + tile_size // 2,
+                      y + tile_size // 2,
+                      radius=14
+                 )
+                 
+
             elif char in (" ", "."):
                 pass
 
-    return solid_tiles, hazard_tiles, liquid_tiles, player_spawn
+    return solid_tiles, hazard_tiles, liquid_tiles, player_spawn, goal

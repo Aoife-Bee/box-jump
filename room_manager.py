@@ -16,6 +16,7 @@ class RoomManager:
         self.solid_tiles = []
         self.hazard_tiles = []
         self.liquid_tiles = []
+        self.goal = None
 
         self.tiles_to_draw = []
         self.camera = None
@@ -96,9 +97,9 @@ class RoomManager:
         room_data = self.rooms[room_id]
         self.layout = room_data["layout"]
 
-        self.solid_tiles, self.hazard_tiles, self.liquid_tiles, player_spawn = self.build_func(
-            self.layout, tile_size=self.tile_size
-        )
+        self.solid_tiles, self.hazard_tiles, self.liquid_tiles, player_spawn, self.goal = \
+        self.build_func(self.layout, tile_size=self.tile_size)
+        
         self.spawn_px = (int(player_spawn[0]), int(player_spawn[1]))
         self.tiles_to_draw = self.solid_tiles + self.liquid_tiles
 

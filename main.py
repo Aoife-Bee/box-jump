@@ -8,7 +8,8 @@ from healthbar import HealthBar
 from collisions import *
 from room_manager import RoomManager
 from death_controller import DeathController
-
+from credits import OpeningCredits, EndCredits
+from credits_data import OPENING_CARDS, END_CREDITS
 
 def main():
     pygame.init()
@@ -21,6 +22,8 @@ def main():
     death = DeathController(delay=4.0)
 
     rm = RoomManager(ROOMS, DOORS, TILE_SIZE, build_level_from_ascii)
+    opening = OpeningCredits(cards=OPENING_CARDS, seconds_per_card=3.9)
+    end_credits = EndCredits(items=END_CREDITS, scroll_speed=70)
     rm.load_room(START_ROOM, player)
 
     running = True
@@ -32,9 +35,33 @@ def main():
             if event.type == pygame.QUIT:
                 log_event("Quit event detected. Exiting the game.")
                 running = False
+            if opening.active:
+                opening.handle_event(event)
+                continue
+            if end_credits.active:
+                end_credits.handle_event(event)
+                continue
+
             player.handle_event(event)
+
+            # TEMP CREDIT TEST TRIGGER
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_k:
+                end_credits.start(SCREEN_HEIGHT)
         
         keys = pygame.key.get_pressed()
+
+        if opening.active:
+            opening.update(dt)
+            rm.sky.draw(screen)
+            opening.draw(screen)
+            pygame.display.flip()
+            continue
+
+        if end_credits.active:
+            end_credits.update(dt)
+            end_credits.draw(screen)
+            pygame.display.flip()
+            continue
 
         if death.update(dt, player, rm):
             pass
@@ -49,6 +76,9 @@ def main():
 
             hazard_collision(player, rm.hazard_tiles)
 
+            if goal_collision(player, rm.goal):
+                end_credits.start(SCREEN_HEIGHT)
+
             rm.update_transition(dt, player)
 
         rm.camera.update(player, dt, keys)
@@ -58,9 +88,10 @@ def main():
         player.draw(screen, rm.camera)
         for tile in rm.tiles_to_draw:
             tile.draw(screen, rm.camera)
-        health_bar.draw(screen, player.health)
+        if rm.goal:
+            rm.goal.draw(screen, rm.camera)
 
-        #display game objects here
+        health_bar.draw(screen, player.health)
         death.draw(screen)
         pygame.display.flip()
 
