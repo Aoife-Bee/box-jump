@@ -16,13 +16,15 @@ def build_level_from_ascii(layout, tile_size):
             x = col_index * tile_size
             y = row_index * tile_size
 
-            if char == "g":
+            if char == "g": #grass
                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (94, 182, 30)))
-            elif char == "b":
+            elif char == "b": #cloud
                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, ("beige")))
-            elif char == "#":
+            elif char == "#": #rock
                  solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (75, 93, 61)))
-            elif char == "t":
+            elif char == "s": #slime tile
+                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (61, 63, 6)))
+            elif char == "t": #tree
                  solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (150, 75, 0)))
 
                  
@@ -68,9 +70,9 @@ def build_level_from_ascii(layout, tile_size):
                 solid_tiles.append(spike_r)
 
             elif char == "~":
-                liquid_tiles.append(WaterTile(x, y, tile_size, tile_size, depth=0.75))
+                liquid_tiles.append(SwampWaterTile(x, y, tile_size, tile_size, (128, 128, 0), depth=1.0))
             elif char == "=":
-                liquid_tiles.append(SwampWaterTile(x, y, tile_size, tile_size, depth=0.6))
+                liquid_tiles.append(SwampWaterTile(x, y, tile_size, tile_size, (138, 138, 0), depth=0.6))
 
             elif char == "P":
                 player_spawn = (x, y)

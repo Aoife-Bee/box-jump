@@ -48,6 +48,12 @@ class Player(Rectangle):
         self.is_jumping = False
         self.in_liquid = False
         self.state = "idle"
+        self.stand_width = PLAYER_WIDTH
+        self.stand_height = PLAYER_HEIGHT
+        self.crouch_width = TILE_SIZE
+        self.crouch_height = TILE_SIZE - 8
+        self.wants_crouch = False
+        self.is_crouching = False
 
     def _init_damage(self):
         self.iframes = 0.0
@@ -117,10 +123,17 @@ class Player(Rectangle):
         self.update_rect()
 
     def update_state(self, keys):
-        if keys[pygame.K_s]:
+        self.wants_crouch = keys[pygame.K_s]
+
+        if self.wants_crouch:
             self.state = "crouching"
             self.is_sprinting = False
+            if not self.is_crouching:
+                self.is_crouching = True
+                self.set_size_keep_feet(self.crouch_width, self.crouch_height)
             return
+        else:
+            pass
 
         if keys[pygame.K_LSHIFT] and self.is_grounded and self.liquid_timer == 0:
             self.state = "sprinting"
@@ -133,6 +146,25 @@ class Player(Rectangle):
 
         if not self.is_grounded and getattr(self, "was_sprinting", False):
             self.is_sprinting = True
+
+    def set_size_keep_feet(self, new_w, new_h):
+        # keep bottom aligned so you don't sink/pop
+        bottom = self.rect.bottom
+
+        self.width = new_w
+        self.height = new_h
+
+        # update rect size first
+        self.rect.width = new_w
+        self.rect.height = new_h
+
+        # restore bottom, then sync floats
+        self.rect.bottom = bottom
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+
+    def wants_to_uncrouch(self):
+        return self.is_crouching and not self.wants_crouch
 
     def apply_movement(self, keys, dt):
 

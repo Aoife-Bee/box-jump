@@ -73,6 +73,8 @@ def main():
             resolve_solid_collisions_x(player, rm.solid_tiles)
             player.move_y(dt)
             resolve_solid_collisions_y(player, rm.solid_tiles)
+            
+            try_uncrouch(player, rm.solid_tiles)
 
             hazard_collision(player, rm.hazard_tiles)
 

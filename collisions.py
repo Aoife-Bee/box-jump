@@ -1,3 +1,5 @@
+import pygame
+
 def apply_liquid_effects(player, liquid_tiles, dt):
     player.in_liquid = False
     for liquid in liquid_tiles:
@@ -43,6 +45,31 @@ def resolve_solid_collisions_y(player, solid_tiles):
 
             player.y = player.rect.y
             player.velocity_y = 0
+
+def can_stand(player, solid_tiles):
+    bottom = player.rect.bottom
+    test = pygame.Rect(player.rect.x, player.rect.y, player.stand_width, player.stand_height)
+    test.bottom = bottom
+
+    for tile in solid_tiles:
+        box = getattr(tile, "collision_box", None)
+        if box and test.colliderect(box):
+            return False
+    return True
+
+def try_uncrouch(player, solid_tiles):
+    if not player.is_crouching:
+        return False
+    if player.wants_crouch:
+        return False
+    
+    if can_stand(player, solid_tiles):
+        player.is_crouching = False
+        player.set_size_keep_feet(player.stand_width, player.stand_height)
+        return True
+    
+    return False
+
 
 def hazard_collision(player, hazard_tiles):
     for hazard in hazard_tiles:
