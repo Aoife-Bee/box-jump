@@ -19,4 +19,9 @@ limited ability to make visuals for the game, I actually think it looks quite pr
 Refactoring - This is something I WISH I had more time to practice. I did invest a not insignificant amount of time into simplifying parts of my code, making
 things less complicated or structuring things in an organized manner, but again, I simply ran out of time here to really do as much of this as I wanted to.
 
+Patching - I was able to turn the game into an executable file using pyinstaller, and I shared the game this way with a few of my personal friends. Getting
+their feedback immediately, they straight away told me things they would like to see added or changed, and so I also got a little bit of experience with
+having people test my game for me and I was able to quickly patch in some of the requests and send them a new 1.0.1 version of the game.
+
+
 
