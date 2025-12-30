@@ -1,12 +1,22 @@
+#python generated files
+__pycache__/
+*.pyc
+
+#virtual environment
+.venv/
+venv/
+
+#PyInstaller output
+build/
+dist/
+*.spec
+*.zip
+
+#OS Junk
+.DS_Store
+Thumbs.db
+
 #logs
 game_state.jsonl
 game_events.jsonl
 
-#python generated files
-__pycache__/
-
-#virtual environment
-.venv
-
-#misc
-temp_code.txt

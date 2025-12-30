@@ -33,6 +33,19 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                player.health.health = player.health.max_health
+                player.health.is_dead = False
+
+                death.active = False
+                death.timer = 0.0
+
+                opening.active = False
+                end_credits.active = False
+
+                rm.load_room(START_ROOM, player)
+                continue
+
             if opening.active:
                 opening.handle_event(event)
                 continue
