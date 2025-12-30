@@ -18,7 +18,7 @@ def build_level_from_ascii(layout, tile_size):
 
             if char == "g": #grass
                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (94, 182, 30)))
-            elif char == "b": #cloud
+            elif char == "c": #cloud
                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, ("beige")))
             elif char == "#": #rock
                  solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (75, 93, 61)))
@@ -26,6 +26,8 @@ def build_level_from_ascii(layout, tile_size):
                  solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (61, 63, 6)))
             elif char == "t": #tree
                  solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (150, 75, 0)))
+            elif char == "b": #bone
+                 solid_tiles.append(SolidTile(x, y, tile_size, tile_size, (100, 100, 100)))
 
                  
             elif char == "^":

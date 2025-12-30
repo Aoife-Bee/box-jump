@@ -1,6 +1,5 @@
 import pygame
 from constants import *
-from logger import log_state, log_event
 from player import Player
 from builder import build_level_from_ascii
 from rooms import ROOMS, DOORS, START_ROOM
@@ -33,7 +32,6 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                log_event("Quit event detected. Exiting the game.")
                 running = False
             if opening.active:
                 opening.handle_event(event)
@@ -84,7 +82,7 @@ def main():
             rm.update_transition(dt, player)
 
         rm.camera.update(player, dt, keys)
-        
+
         #draw everything
         rm.sky.draw(screen)
         player.draw(screen, rm.camera)

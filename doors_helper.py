@@ -27,3 +27,4 @@ def get_door_rect(layout, marker="."):
 print("ROOM_01 . :", get_door_rect(ROOM_01_MAP, "."))
 print("ROOM_02 . :", get_door_rect(ROOM_02_MAP, "."))
 print("ROOM_03 . :", get_door_rect(ROOM_03_MAP, "."))
+print("ROOM_04 . :", get_door_rect(ROOM_04_MAP, "."))

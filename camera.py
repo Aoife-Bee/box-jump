@@ -59,8 +59,8 @@ class Camera:
 
         self.offset_y = max(-self.max_offset, min(self.max_offset, self.offset_y))
 
-        target_cx = target.x + target.rect.width / 2
-        target_cy = target.y + target.rect.height / 2
+        target_cx = target.rect.centerx
+        target_cy = target.rect.bottom
 
         self.x = target_cx - SCREEN_WIDTH / 2
         self.y = target_cy - SCREEN_HEIGHT / 2 + self.offset_y

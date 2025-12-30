@@ -50,7 +50,7 @@ class Player(Rectangle):
         self.state = "idle"
         self.stand_width = PLAYER_WIDTH
         self.stand_height = PLAYER_HEIGHT
-        self.crouch_width = TILE_SIZE
+        self.crouch_width = TILE_SIZE - 2
         self.crouch_height = TILE_SIZE - 8
         self.wants_crouch = False
         self.is_crouching = False
@@ -150,16 +150,22 @@ class Player(Rectangle):
     def set_size_keep_feet(self, new_w, new_h):
         # keep bottom aligned so you don't sink/pop
         bottom = self.rect.bottom
+        centerx = self.rect.centerx
 
         self.width = new_w
         self.height = new_h
 
-        # update rect size first
+        #update rect from floats
+        self.update_rect()
+
+        #new size
         self.rect.width = new_w
         self.rect.height = new_h
 
-        # restore bottom, then sync floats
+        # restore anchors
         self.rect.bottom = bottom
+        self.rect.centerx = centerx
+        #sync floats
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
 
