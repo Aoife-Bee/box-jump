@@ -1,4 +1,4 @@
-This was my first ever personal project, done as part of the Boot.dev course. 
+This was my first ever personal project, done as part of the Boot.dev course, but entirely self directed.
 
 I ended up relying a LOT on chat gpt to help with my code here, more than I'm happy with honestly, because my writing fundamentals are still very under-practiced.
 But, thanks to the help I had with writing the code, I was able to practice a lot of other concepts - thinking about level design, difficulty, project scope, 
@@ -18,4 +18,5 @@ limited ability to make visuals for the game, I actually think it looks quite pr
 
 Refactoring - This is something I WISH I had more time to practice. I did invest a not insignificant amount of time into simplifying parts of my code, making
 things less complicated or structuring things in an organized manner, but again, I simply ran out of time here to really do as much of this as I wanted to.
+
 
